@@ -1,6 +1,7 @@
 services:
   hindsight-api:
     image: ghcr.io/bjn/hermes-hindsight-service:latest
+    pull_policy: always
     restart: unless-stopped
     depends_on:
       hindsight-postgres:
