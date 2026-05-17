@@ -43,6 +43,9 @@ services:
       hermes-webui:
         aliases:
           - hindsight-memory
+      hindsight-control-plane:
+        aliases:
+          - hindsight-memory
 
   hindsight-postgres:
     image: pgvector/pgvector:pg16
@@ -73,3 +76,6 @@ networks:
   hermes-webui:
     external: true
     name: z14bf3b4mu61wixrpeidbeek
+  hindsight-control-plane:
+    external: true
+    name: kcpsn6pb3hzjd53e218m2uth
