@@ -36,6 +36,12 @@ services:
       coolify:
         aliases:
           - hindsight-memory
+      hermes-agent:
+        aliases:
+          - hindsight-memory
+      hermes-webui:
+        aliases:
+          - hindsight-memory
 
   hindsight-postgres:
     image: pgvector/pgvector:pg16
@@ -60,3 +66,9 @@ volumes:
 networks:
   coolify:
     external: true
+  hermes-agent:
+    external: true
+    name: treg5ilrtlvhiuw90tql5y4l
+  hermes-webui:
+    external: true
+    name: z14bf3b4mu61wixrpeidbeek
