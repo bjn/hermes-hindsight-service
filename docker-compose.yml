@@ -1,0 +1,62 @@
+services:
+  hindsight-api:
+    image: ghcr.io/bjn/hermes-hindsight-service:latest
+    restart: unless-stopped
+    depends_on:
+      hindsight-postgres:
+        condition: service_healthy
+    environment:
+      HINDSIGHT_API_DATABASE_URL: postgresql://hindsight:${SERVICE_PASSWORD_POSTGRES}@hindsight-postgres:5432/hindsight
+      HINDSIGHT_API_MIGRATION_DATABASE_URL: postgresql://hindsight:${SERVICE_PASSWORD_POSTGRES}@hindsight-postgres:5432/hindsight
+      HINDSIGHT_API_LLM_PROVIDER: openai
+      HINDSIGHT_API_LLM_API_KEY: ${HINDSIGHT_API_LLM_API_KEY}
+      HINDSIGHT_API_LLM_MODEL: gpt-4.1-mini
+      HINDSIGHT_API_EMBEDDINGS_PROVIDER: openai
+      HINDSIGHT_API_EMBEDDINGS_OPENAI_API_KEY: ${HINDSIGHT_API_LLM_API_KEY}
+      HINDSIGHT_API_EMBEDDINGS_OPENAI_MODEL: text-embedding-3-small
+      HINDSIGHT_API_RERANKER_PROVIDER: none
+      HINDSIGHT_API_HOST: 0.0.0.0
+      HINDSIGHT_API_PORT: 8888
+      HINDSIGHT_API_RUN_MIGRATIONS_ON_STARTUP: 'true'
+      HINDSIGHT_API_VECTOR_EXTENSION: pgvector
+      HINDSIGHT_API_TEXT_SEARCH_EXTENSION: native
+      HINDSIGHT_API_LOG_LEVEL: info
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8888/health', timeout=3).read()"
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 90s
+    networks:
+      default: null
+      coolify:
+        aliases:
+          - hindsight-memory
+
+  hindsight-postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hindsight
+      POSTGRES_PASSWORD: ${SERVICE_PASSWORD_POSTGRES}
+      POSTGRES_DB: hindsight
+    volumes:
+      - hindsight-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U hindsight -d hindsight
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  hindsight-postgres-data:
+
+networks:
+  coolify:
+    external: true
