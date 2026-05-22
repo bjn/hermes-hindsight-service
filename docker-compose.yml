@@ -22,6 +22,10 @@ services:
       HINDSIGHT_API_VECTOR_EXTENSION: pgvector
       HINDSIGHT_API_TEXT_SEARCH_EXTENSION: native
       HINDSIGHT_API_LOG_LEVEL: info
+      # Reduce overnight retain/ANN DB contention observed under parallel batch ingest.
+      HINDSIGHT_API_RETAIN_MAX_CONCURRENT: '2'
+      HINDSIGHT_API_DB_ACQUIRE_TIMEOUT: '60'
+      HINDSIGHT_API_DB_COMMAND_TIMEOUT: '120'
     healthcheck:
       test:
         - CMD
