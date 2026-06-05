@@ -18,7 +18,7 @@ permissions:
 
 env:
   IMAGE_NAME: ghcr.io/bjn/hermes-hindsight-service
-  COOLIFY_APPLICATION_UUID: xtlb8ebit5pky5e5wlpotbbw
+  COOLIFY_APPLICATION_UUID: xp4v7cbwglechtgz1k14uo8d
   COOLIFY_API_URL: https://app.coolify.io/api/v1
 
 jobs:
